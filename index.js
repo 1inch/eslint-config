@@ -4,6 +4,10 @@ module.exports = {
         node: true,
         jest: true,
     },
+    parserOptions: {
+        project: 'tsconfig.json',
+        sourceType: 'module',
+    },
     ignorePatterns: ['*.mock.ts'],
     parser: '@typescript-eslint/parser',
     plugins: ['@typescript-eslint', 'unused-imports'],
