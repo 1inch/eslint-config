@@ -13,11 +13,13 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-unused-imports": "^2.0.0",
-    "semver": "7.5.1"
+    "eslint-plugin-unused-imports": "^2.0.0"
   },
   "scripts": {
     "release": "node ./release.mjs"
+  },
+  "devDependencies": {
+    "semver": "7.5.1"
   },
   "peerDependencies": {
     "prettier": "^2",
