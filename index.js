@@ -47,7 +47,6 @@ module.exports = {
         'no-console': 'error',
         '@typescript-eslint/explicit-function-return-type': 'error',
         '@typescript-eslint/no-non-null-assertion': 'off',
-        '@typescript-eslint/indent': 'warn',
         'object-curly-newline': ['error', { consistent: true }],
         'no-unused-private-class-members': 'error',
         'no-restricted-syntax': 'warn',
