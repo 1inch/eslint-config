@@ -1,7 +1,8 @@
 module.exports = {
     root: true,
     env: {
-        node: true
+        node: true,
+        jest: true,
     },
     ignorePatterns: ['*.mock.ts'],
     parser: '@typescript-eslint/parser',
@@ -13,6 +14,8 @@ module.exports = {
     ],
     rules: {
         '@typescript-eslint/member-ordering': 'error',
+        '@typescript-eslint/interface-name-prefix': 'off',
+        '@typescript-eslint/explicit-module-boundary-types': 'warn',
         'lines-between-class-members': 'error',
         'padding-line-between-statements': [
             'error',
@@ -39,7 +42,16 @@ module.exports = {
         'no-async-promise-executor': 0,
         'no-console': 'error',
         '@typescript-eslint/explicit-function-return-type': 'error',
-        '@typescript-eslint/no-non-null-assertion': 'off'
+        '@typescript-eslint/no-non-null-assertion': 'off',
+        '@typescript-eslint/indent': 'warn',
+        'object-curly-newline': ['error', { consistent: true }],
+        'no-unused-private-class-members': 'error',
+        'no-restricted-syntax': 'warn',
+        '@typescript-eslint/no-use-before-define': 'warn',
+        '@typescript-eslint/no-unsafe-assignment': 'warn',
+        'max-classes-per-file': 'warn',
+        '@typescript-eslint/no-unsafe-return': 'warn',
+        'guard-for-in': 'warn'
     },
     overrides: [
         {
