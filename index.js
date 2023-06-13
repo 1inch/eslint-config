@@ -2,10 +2,16 @@ const path = require('path')
 
 const getPluginPath = (plugin, filepath) => path.resolve(
     path.dirname(
-        require.resolve(`../../node_modules/${plugin}`),
+        require.resolve(`./node_modules/${plugin}`),
     ),
     filepath
-)
+);
+
+    [
+    getPluginPath('@eslint/js', 'configs/eslint-recommended.js'),
+        getPluginPath('@typescript-eslint/eslint-plugin', 'configs/recommended.js'),
+        getPluginPath('eslint-config-prettier', 'index.js'),
+    ].map(f => console.log(f))
 
 module.exports = {
     root: true,
