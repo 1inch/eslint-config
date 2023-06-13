@@ -5,7 +5,7 @@ Common eslint config for all node.js repositories
 ## Install
 
 ```bash
-$ yarn add -D https://github.com/1inch/eslint-config.git
+$ npx install-peerdeps --dev https://github.com/1inch/eslint-config.git#latest
 ```
 
 And then setup `.eslintrc`:

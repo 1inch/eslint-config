@@ -1,18 +1,3 @@
-const path = require('path')
-
-const getPluginPath = (plugin, filepath) => path.resolve(
-    path.dirname(
-        require.resolve(`./node_modules/${plugin}`),
-    ),
-    filepath
-);
-
-    [
-    getPluginPath('@eslint/js', 'configs/eslint-recommended.js'),
-        getPluginPath('@typescript-eslint/eslint-plugin', 'configs/recommended.js'),
-        getPluginPath('eslint-config-prettier', 'index.js'),
-    ].map(f => console.log(f))
-
 module.exports = {
     root: true,
     env: {
@@ -22,9 +7,9 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     plugins: ['@typescript-eslint', 'unused-imports'],
     extends: [
-        getPluginPath('@eslint/js', 'configs/eslint-recommended'),
-        getPluginPath('@typescript-eslint/eslint-plugin', 'configs/recommended.js'),
-        getPluginPath('eslint-config-prettier', 'index.js'),
+        'eslint:recommended',
+        'plugin:@typescript-eslint/recommended',
+        'plugin:prettier/recommended'
     ],
     rules: {
         '@typescript-eslint/member-ordering': 'error',
