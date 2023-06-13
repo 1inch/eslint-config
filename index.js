@@ -1,3 +1,12 @@
+const path = require('path')
+
+const getPluginPath = (plugin, filepath) => path.resolve(
+    path.dirname(
+        require.resolve(`../../node_modules/${plugin}`),
+    ),
+    filepath
+)
+
 module.exports = {
     root: true,
     env: {
@@ -7,9 +16,9 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     plugins: ['@typescript-eslint', 'unused-imports'],
     extends: [
-        'eslint:recommended',
-        'plugin:@typescript-eslint/recommended',
-        'plugin:prettier/recommended'
+        getPluginPath('@eslint/js', 'configs/eslint-recommended'),
+        getPluginPath('@typescript-eslint/eslint-plugin', 'configs/recommended.js'),
+        getPluginPath('eslint-config-prettier', 'index.js'),
     ],
     rules: {
         '@typescript-eslint/member-ordering': 'error',
