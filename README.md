@@ -5,7 +5,16 @@ Common eslint config for all node.js repositories
 ## Install
 
 ```bash
-$ npx install-peerdeps --dev https://github.com/1inch/eslint-config.git#latest
+$ yarn add -D https://github.com/1inch/eslint-config.git#latest \
+  @typescript-eslint/eslint-plugin@5.59 \
+  @typescript-eslint/parser@5.51 \
+  eslint-config-prettier@8.3 \
+  eslint-config-standard@17 \
+  eslint-plugin-import@2.26 \
+  eslint-plugin-n@16 \
+  eslint-plugin-prettier@4 \
+  eslint-plugin-promise@6 \
+  eslint-plugin-unused-imports@2
 ```
 
 And then setup `.eslintrc`:
