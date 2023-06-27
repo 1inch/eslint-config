@@ -17,15 +17,12 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
+    "eslint-import-resolver-typescript": "3.5.5",
     "eslint-plugin-n": "^16.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "prettier": "^2",
     "typescript": "^4.9"
-  },
-  "devDependencies": {
-    "eslint-import-resolver-typescript": "3.5.5",
-    "eslint-plugin-import": "2.27.5"
   }
 }
