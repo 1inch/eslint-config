@@ -5,7 +5,7 @@ module.exports = {
     },
     ignorePatterns: ['*.mock.ts'],
     parser: '@typescript-eslint/parser',
-    plugins: ['@typescript-eslint', 'unused-imports'],
+    plugins: ['@typescript-eslint', 'unused-imports', 'import'],
     extends: [
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
@@ -13,6 +13,11 @@ module.exports = {
         'plugin:import/recommended',
         'plugin:import/typescript'
     ],
+    settings: {
+        'import/resolver': {
+            typescript: {}
+        }
+    },
     rules: {
         '@typescript-eslint/member-ordering': 'error',
         'lines-between-class-members': 'error',
@@ -41,7 +46,20 @@ module.exports = {
         'no-async-promise-executor': 0,
         'no-console': 'error',
         '@typescript-eslint/explicit-function-return-type': 'error',
-        '@typescript-eslint/no-non-null-assertion': 'off'
+        '@typescript-eslint/no-non-null-assertion': 'off',
+        'import/order': [
+            'error',
+            {
+                groups: [
+                    'external',
+                    'builtin',
+                    'internal',
+                    'sibling',
+                    'parent',
+                    'index'
+                ]
+            }
+        ]
     },
     overrides: [
         {

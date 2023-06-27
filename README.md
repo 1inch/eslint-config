@@ -14,7 +14,8 @@ $ yarn add -D https://github.com/1inch/eslint-config.git#latest \
   eslint-plugin-n@16 \
   eslint-plugin-prettier@4 \
   eslint-plugin-promise@6 \
-  eslint-plugin-unused-imports@2
+  eslint-plugin-unused-imports@2 \
+  eslint-import-resolver-typescript@3.5.5
 ```
 
 And then setup `.eslintrc`:
