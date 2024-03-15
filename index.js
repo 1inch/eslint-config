@@ -32,7 +32,7 @@ module.exports = {
         '@typescript-eslint/adjacent-overload-signatures': 'off',
         'no-unused-vars': 'off',
         'no-prototype-builtins': 'off',
-        'max-len': ['error', {code: 160, ignoreComments: true, ignorePattern: "import\\s.+\\sfrom\\s'.+';?$"}],
+        'max-len': ['error', {code: 120, ignoreComments: true, ignorePattern: "import\\s.+\\sfrom\\s'.+';?$"}],
         'max-depth': ['error', 3],
         'max-lines-per-function': ['error', 255],
         'max-params': ['error', 10],
