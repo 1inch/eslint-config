@@ -1,12 +1,17 @@
 {
   "name": "@1inch/eslint-config",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "main": "index.js",
   "license": "UNLICENSED",
   "dependencies": {
     "semver": "^7.5.2"
   },
   "scripts": {
+    "build": "tsc",
+    "changelog:generate": "changelog generate -a"
+  },
+  "devDependencies": {
+    "generate-changelog": "^1.8.0"
   },
   "peerDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.59.0",
