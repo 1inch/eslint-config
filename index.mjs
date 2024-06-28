@@ -9,7 +9,6 @@ import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
 import eslintConfigPrettier from "eslint-config-prettier";
-import stylistic from '@stylistic/eslint-plugin'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -91,7 +90,7 @@ export default [{
         "no-unused-vars": "off",
         "no-prototype-builtins": "off",
 
-        "@stylistic/max-len": ["error", {
+        "max-len": ["error", {
             code: 120,
             ignoreComments: true,
             ignorePattern: "import\\s.+\\sfrom\\s'.+';?$",
@@ -128,4 +127,5 @@ export default [{
         }],
     },
 },
-    eslintConfigPrettier];
+    eslintConfigPrettier
+];
