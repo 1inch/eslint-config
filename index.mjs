@@ -60,7 +60,10 @@ export default [{
         },
     },
 
+
     rules: {
+        "import/namespace": "off",
+        "import/default": "off",
         "@typescript-eslint/member-ordering": "error",
         "lines-between-class-members": "error",
 
@@ -117,10 +120,10 @@ export default [{
         }],
     },
 }, {
-    files: ["src/**/*.spec.ts"],
+    files: ["src/**/*.test.ts", "src/**/*.integration-test.ts", "src/**/*.spec.ts"],
 
     rules: {
-        "max-lines-per-function": ["error", 400],
+        "max-lines-per-function": ["error", 1000],
 
         "max-len": ["error", {
             code: 1130,
