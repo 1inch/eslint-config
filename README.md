@@ -80,19 +80,3 @@ export default [
         },
     }];
 ```
-
-## Release new version 
-
-```bash
-# patch
-$ yarn release --patch
-
-# minot
-$ yarn release --minor
-
-# major
-$ yarn release --major
-
-# exact
-$ yarn release v1.0.0
-```
