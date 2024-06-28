@@ -120,7 +120,7 @@ export default [{
         }],
     },
 }, {
-    files: ['src/**/*.test.ts', 'src/**/*.integration-test.ts', 'src/**/*.spec.ts'],
+    files: ["src/**/*.test.ts", "src/**/*.integration-test.ts", "src/**/*.spec.ts"],
 
     rules: {
         "max-lines-per-function": ["error", 1000],
