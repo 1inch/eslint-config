@@ -1,6 +1,6 @@
 {
   "name": "@1inch/eslint-config",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "index.mjs",
   "license": "UNLICENSED",
   "dependencies": {
@@ -9,27 +9,6 @@
   "scripts": {
     "build": "tsc",
     "changelog:generate": "changelog generate -a"
-  },
-  "devDependencies": {
-    "@1inch/eslint-config": "1.5.3-rc.2",
-    "@eslint/compat": "1",
-    "@eslint/eslintrc": "3",
-    "@eslint/js": "9",
-    "@typescript-eslint/eslint-plugin": "7",
-    "@typescript-eslint/parser": "7",
-    "eslint": "9",
-    "eslint-config-prettier": "9",
-    "eslint-config-standard": "17",
-    "eslint-import-resolver-typescript": "3",
-    "eslint-plugin-import": "2",
-    "eslint-plugin-n": "17",
-    "eslint-plugin-prettier": "5",
-    "eslint-plugin-promise": "6",
-    "eslint-plugin-unused-imports": "4",
-    "generate-changelog": "^1.8.0",
-    "globals": "15",
-    "prettier": "3",
-    "typescript": "5"
   },
   "peerDependencies": {
     "@eslint/compat": "^1.1.0",
