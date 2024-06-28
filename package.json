@@ -1,7 +1,7 @@
 {
   "name": "@1inch/eslint-config",
   "version": "1.5.2",
-  "main": "index.js",
+  "main": "index.mjs",
   "license": "UNLICENSED",
   "dependencies": {
     "semver": "^7.5.2"
