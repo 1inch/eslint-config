@@ -4,28 +4,27 @@ Common eslint config for all node.js repositories
 
 ## Install
 
-Add to package.json
-```json
-"devDependencies": {
-        ...
-    "@typescript-eslint/eslint-plugin": "^7.14.1",
-    "@typescript-eslint/parser": "^7.14.1",
-    "eslint": "^9.5.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-n": "^17.9.0",
-    "eslint-plugin-prettier": "^5.1.3",
-    "eslint-plugin-promise": "^6.2.0",
-    "eslint-plugin-unused-imports": "^4.0.0",
-    "prettier": "^3.3.2",
-    "typescript": "^5.5.2",
-    "@eslint/compat": "^1.1.0",
-    "globals": "^15.6.0",
-    "@eslint/js": "^9.5.0",
-    "@eslint/eslintrc": "^3.1.0"
-}
+Install packages
+```shell
+pnpm install  --save-dev  \
+  @typescript-eslint/eslint-plugin@7 \
+  @typescript-eslint/parser@7 \
+  eslint@9 \
+  eslint-config-prettier@9 \
+  eslint-config-standard@17 \
+  eslint-plugin-import@2 \
+  eslint-import-resolver-typescript@3 \
+  eslint-plugin-n@17 \
+  eslint-plugin-prettier@5 \
+  eslint-plugin-promise@6 \
+  eslint-plugin-unused-imports@4 \
+  prettier@3 \
+  typescript@5 \
+  @eslint/compat@1 \
+  globals@15 \
+  @eslint/js@9 \
+  @eslint/eslintrc@3 \
+  @1inch/eslint-config
 ```
 
 And then add file `eslint.config.mjs`:
