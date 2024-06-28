@@ -123,7 +123,7 @@ export default [{
     files: ['src/**/*.test.ts', 'src/**/*.integration-test.ts', 'src/**/*.spec.ts'],
 
     rules: {
-        "max-lines-per-function": ["error", 400],
+        "max-lines-per-function": ["error", 1000],
 
         "max-len": ["error", {
             code: 1130,
