@@ -24,7 +24,7 @@ pnpm install  --save-dev  \
   globals@15 \
   @eslint/js@9 \
   @eslint/eslintrc@3 \
-  @1inch/eslint-config
+  @1inch/eslint-config@latest
 ```
 
 And then add file `eslint.config.mjs`:
