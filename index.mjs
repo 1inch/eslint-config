@@ -118,6 +118,7 @@ export default [{
         "import/order": ["error", {
             groups: ["external", "builtin", "internal", "sibling", "parent", "index"],
         }],
+        "prettier/prettier": ["error", { "semi": false }],
     },
 }, {
     files: ["src/**/*.test.ts", "src/**/*.integration-test.ts", "src/**/*.spec.ts"],
