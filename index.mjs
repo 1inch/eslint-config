@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
 import eslintConfigPrettier from "eslint-config-prettier";
+import stylistic from '@stylistic/eslint-plugin'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,6 +45,7 @@ export default [{
         "@typescript-eslint": fixupPluginRules(typescriptEslint),
         "unused-imports": unusedImports,
         import: fixupPluginRules(_import),
+        '@stylistic': stylistic
     },
 
     languageOptions: {
@@ -118,6 +120,8 @@ export default [{
         "import/order": ["error", {
             groups: ["external", "builtin", "internal", "sibling", "parent", "index"],
         }],
+        "prettier/prettier": ["error", { "semi": false }],
+        '@stylistic/comma-dangle': ['error', 'never'],
     },
 }, {
     files: ["src/**/*.test.ts", "src/**/*.integration-test.ts", "src/**/*.spec.ts"],
