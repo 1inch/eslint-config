@@ -24,6 +24,7 @@ pnpm install  --save-dev  \
   globals@15 \
   @eslint/js@9 \
   @eslint/eslintrc@3 \
+  @stylistic/eslint-plugin@2 \
   @1inch/eslint-config@latest
 ```
 
