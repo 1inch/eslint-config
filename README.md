@@ -81,3 +81,13 @@ export default [
         },
     }];
 ```
+
+Add prettier file `.prettierrc.js`:
+```js
+module.exports = {
+  singleQuote: true,
+  trailingComma: 'none',
+  tabWidth: 2,
+  printWidth: 120
+}
+```
