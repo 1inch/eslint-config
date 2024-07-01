@@ -44,6 +44,9 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      - name: Security
+        run: pnpm audit
+
       - name: Bump package.json version
         id: version
         run: |
