@@ -32,13 +32,11 @@ And then add file `eslint.config.mjs`:
 ```javascript
 import oneInchEslintConfig from "@1inch/eslint-config";
 
-export default [...oneInchEslintConfig]
+export default oneInchEslintConfig
 ```
 
 Remove .eslintignore and use special section in `eslint.config.mjs` for it. Root 1inch eslint config already have this ignores rules.
 ```javascript
-import {fixupPluginRules} from "@eslint/compat";
-import _import from "eslint-plugin-import";
 import oneInchEslintConfig from "@1inch/eslint-config";
 
 export default [
