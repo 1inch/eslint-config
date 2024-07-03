@@ -31,7 +31,6 @@ export default [{
         "**/*.yml",
         "**/*.html",
         "**/graph.serviceuser.postgres.repository.service.ts",
-        "**/frontend",
         "**/migrations",
     ],
 }, ...fixupConfigRules(compat.extends(
