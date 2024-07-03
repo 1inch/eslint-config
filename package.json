@@ -1,6 +1,6 @@
 {
   "name": "@1inch/eslint-config",
-  "version": "2.0.6",
+  "version": "2.0.7-rc.0",
   "main": "index.mjs",
   "license": "UNLICENSED",
   "dependencies": {
