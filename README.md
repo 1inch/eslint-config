@@ -71,7 +71,7 @@ Add prettier file `.prettierrc.js`:
 module.exports = {
   singleQuote: true,
   trailingComma: 'none',
-  tabWidth: 2,
+  tabWidth: 4,
   printWidth: 120
 }
 ```
