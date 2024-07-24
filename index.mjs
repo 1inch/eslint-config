@@ -1,13 +1,13 @@
-import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
+import {fixupConfigRules, fixupPluginRules} from "@eslint/compat";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import unusedImports from "eslint-plugin-unused-imports";
 import _import from "eslint-plugin-import";
 import globals from "globals";
 import tsParser from "@typescript-eslint/parser";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import {fileURLToPath} from "node:url";
 import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
+import {FlatCompat} from "@eslint/eslintrc";
 import eslintConfigPrettier from "eslint-config-prettier";
 import stylistic from '@stylistic/eslint-plugin'
 
@@ -30,7 +30,6 @@ export default [{
         "**/*.json",
         "**/*.yml",
         "**/*.html",
-        "**/graph.serviceuser.postgres.repository.service.ts",
         "**/migrations",
     ],
 }, ...fixupConfigRules(compat.extends(
@@ -67,6 +66,8 @@ export default [{
         "import/default": "off",
         "@typescript-eslint/member-ordering": "error",
         "lines-between-class-members": "error",
+        "import/no-self-import": "error",
+        "import/no-cycle": "error",
 
         "padding-line-between-statements": ["error", {
             blankLine: "always",
@@ -119,7 +120,7 @@ export default [{
         "import/order": ["error", {
             groups: ["external", "builtin", "internal", "sibling", "parent", "index"],
         }],
-        "prettier/prettier": ["error", { "semi": false }],
+        "prettier/prettier": ["error", {"semi": false}],
         '@stylistic/comma-dangle': ['error', 'never'],
     },
 }, {
