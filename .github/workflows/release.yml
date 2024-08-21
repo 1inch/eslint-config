@@ -1,4 +1,4 @@
-name: Publish new version
+name: Release new version
 
 on:
   workflow_dispatch:
@@ -17,6 +17,7 @@ jobs:
     permissions:
       contents: write
       packages: write
+      actions: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,16 +37,8 @@ jobs:
           node-version: 18
           cache: pnpm
 
-      - name: Auth in GitHub private registry npm
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
-          echo "@1inch:registry=https://npm.pkg.github.com" >> .npmrc
-
-      - name: Install Dependencies
-        run: pnpm install
-
-      - name: Security
-        run: pnpm audit
+      - name: Install Dev Dependencies
+        run: pnpm install -D
 
       - name: Bump package.json version
         id: version
@@ -56,11 +49,6 @@ jobs:
 
       - name: Generate changelog
         run: pnpm changelog:generate -t v${{ steps.version.outputs.OLD_VERSION }} || pnpm changelog:generate
-
-      - name: Publish
-        run: pnpm publish --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create github release
         env:
@@ -74,3 +62,8 @@ jobs:
           git push
           git push --tags
           gh release create v${{ steps.version.outputs.NEW_VERSION }} --notes-file CHANGELOG.md
+
+      - name: Trigger publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run publish.yml -r v${{ steps.version.outputs.NEW_VERSION }}
