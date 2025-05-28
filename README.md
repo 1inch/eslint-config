@@ -6,27 +6,10 @@ Common eslint config for all node.js repositories
 
 Install packages
 ```shell
-pnpm install  --save-dev  \
-  @typescript-eslint/eslint-plugin@7 \
-  @typescript-eslint/parser@7 \
-  eslint@9 \
-  eslint-config-prettier@9 \
-  eslint-config-standard@17 \
-  eslint-plugin-import@2 \
-  eslint-import-resolver-typescript@3 \
-  eslint-plugin-n@17 \
-  eslint-plugin-prettier@5 \
-  eslint-plugin-promise@6 \
-  eslint-plugin-unused-imports@4 \
-  prettier@3 \
-  typescript@5 \
-  @eslint/compat@1 \
-  globals@15 \
-  @eslint/js@9 \
-  @eslint/eslintrc@3 \
-  @stylistic/eslint-plugin@2 \
-  @1inch/eslint-config@latest
+pnpm install --save-dev @1inch/eslint-config@latest
 ```
+
+Also it is required to install peer dependencies
 
 And then add file `eslint.config.mjs`:
 ```javascript
