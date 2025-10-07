@@ -21,7 +21,6 @@ pnpm install  --save-dev  \
   prettier@3 \
   typescript@5 \
   @eslint/compat@1 \
-  globals@15 \
   @eslint/js@9 \
   @eslint/eslintrc@3 \
   @stylistic/eslint-plugin@2 \
