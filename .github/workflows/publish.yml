@@ -9,6 +9,9 @@ on:
 jobs:
   publish-to-npm:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -16,7 +19,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 10
 
       - uses: actions/setup-node@v4
         with:
@@ -25,13 +28,15 @@ jobs:
           scope: ${{ github.repository_owner }}
           cache: pnpm
 
+      # pnpm uses npm under the hood, so we need to upgrade it to the latest version to suport OIDC
+      - name: Install npm@11
+        run: npm install -g npm@11
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Publish 🚀
         run: pnpm publish --no-git-checks --access=public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
   publish-to-github:
     runs-on: ubuntu-latest
@@ -45,7 +50,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 10
 
       - uses: actions/setup-node@v4
         with:

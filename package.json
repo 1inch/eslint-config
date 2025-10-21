@@ -1,10 +1,15 @@
 {
   "name": "@1inch/eslint-config",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "main": "index.mjs",
   "license": "UNLICENSED",
   "dependencies": {
     "semver": "^7.5.2"
+  },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/1inch/eslint-config",
+      "directory": "@1inch/eslint-config"
   },
   "scripts": {
     "changelog:generate": "changelog generate -a"
