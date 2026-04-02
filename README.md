@@ -94,12 +94,15 @@ pnpm remove \
 4. **New packages** — install these instead:
 ```shell
 pnpm install --save-dev \
+  eslint@10 \
+  @eslint/js@10 \
   typescript-eslint@8 \
   eslint-plugin-import-x@4 \
   eslint-import-resolver-typescript@4 \
   eslint-config-prettier@10 \
+  eslint-plugin-unused-imports@4 \
   @stylistic/eslint-plugin@5 \
-  globals@16
+  globals@17
 ```
 
 ### Example migration
