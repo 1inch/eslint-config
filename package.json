@@ -3,10 +3,13 @@
   "version": "4.0.0",
   "main": "index.mjs",
   "license": "UNLICENSED",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/1inch/eslint-config",
-    "directory": "@1inch/eslint-config"
+  "dependencies": {
+    "semver": "^7.7.2"
+  },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/1inch/eslint-config",
+      "directory": "@1inch/eslint-config"
   },
   "scripts": {
     "changelog:generate": "changelog generate -a",
