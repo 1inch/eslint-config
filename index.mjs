@@ -1,25 +1,13 @@
-import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import unusedImports from "eslint-plugin-unused-imports";
-import _import from "eslint-plugin-import";
-import globals from "globals";
-import tsParser from "@typescript-eslint/parser";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
-import eslintConfigPrettier from "eslint-config-prettier";
+import eslint from '@eslint/js'
+import tseslint from 'typescript-eslint'
+import importX from 'eslint-plugin-import-x'
+import unusedImports from 'eslint-plugin-unused-imports'
+import prettierPlugin from 'eslint-plugin-prettier'
+import eslintConfigPrettier from 'eslint-config-prettier'
 import stylistic from '@stylistic/eslint-plugin'
+import globals from 'globals'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
-
-export default [{
+export default tseslint.config({
     ignores: [
         "**/*.mock.ts",
         "**/node_modules",
@@ -33,38 +21,33 @@ export default [{
         "**/graph.serviceuser.postgres.repository.service.ts",
         "**/migrations",
     ],
-}, ...fixupConfigRules(compat.extends(
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-    "plugin:import/recommended",
-    "plugin:import/typescript",
-)), {
+},
+    eslint.configs.recommended,
+    ...tseslint.configs.recommended,
+    importX.flatConfigs.recommended,
+    importX.flatConfigs.typescript,
+{
     plugins: {
-        "@typescript-eslint": fixupPluginRules(typescriptEslint),
         "unused-imports": unusedImports,
-        import: fixupPluginRules(_import),
-        '@stylistic': stylistic
+        "prettier": prettierPlugin,
+        "@stylistic": stylistic,
     },
 
     languageOptions: {
         globals: {
             ...globals.node,
         },
-
-        parser: tsParser,
     },
 
     settings: {
-        "import/resolver": {
+        "import-x/resolver": {
             typescript: {},
         },
     },
 
-
     rules: {
-        "import/namespace": "off",
-        "import/default": "off",
+        "import-x/namespace": "off",
+        "import-x/default": "off",
         "@typescript-eslint/member-ordering": "error",
         "lines-between-class-members": "error",
 
@@ -116,11 +99,11 @@ export default [{
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/no-non-null-assertion": "off",
 
-        "import/order": ["error", {
+        "import-x/order": ["error", {
             groups: ["external", "builtin", "internal", "sibling", "parent", "index"],
         }],
         "prettier/prettier": ["error", { "semi": false }],
-        '@stylistic/comma-dangle': ['error', 'never'],
+        "@stylistic/comma-dangle": ["error", "never"],
     },
 }, {
     files: ["src/**/*.test.ts", "src/**/*.integration-test.ts", "src/**/*.spec.ts"],
@@ -134,4 +117,4 @@ export default [{
     },
 },
     eslintConfigPrettier
-];
+)
