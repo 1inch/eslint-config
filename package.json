@@ -1,39 +1,48 @@
 {
   "name": "@1inch/eslint-config",
-  "version": "3.0.8",
+  "version": "5.0.0",
   "main": "index.mjs",
   "license": "UNLICENSED",
   "dependencies": {
-    "semver": "^7.7.2"
+    "semver": "^7.7.4"
   },
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/1inch/eslint-config",
-      "directory": "@1inch/eslint-config"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1inch/eslint-config",
+    "directory": "@1inch/eslint-config"
   },
   "scripts": {
-    "changelog:generate": "changelog generate -a"
+    "changelog:generate": "changelog generate -a",
+    "test": "vitest run"
   },
   "devDependencies": {
-    "generate-changelog": "^1.8.0"
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint": "^10.1.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import-x": "^4.16.2",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "generate-changelog": "^1.8.0",
+    "globals": "^17.4.0",
+    "prettier": "^3.8.1",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.58.0",
+    "vitest": "^4.1.2"
   },
   "peerDependencies": {
-    "@eslint/compat": "^1.1.0",
-    "@eslint/eslintrc": "^3.1.0",
-    "@eslint/js": "^9.5.0",
-    "@stylistic/eslint-plugin": "^2.3.0",
-    "@typescript-eslint/eslint-plugin": "^8",
-    "@typescript-eslint/parser": "^8",
-    "eslint": "^9.5.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-n": "^17.9.0",
-    "eslint-plugin-prettier": "^5.1.3",
-    "eslint-plugin-promise": "^6.2.0",
+    "@eslint/js": "^10.0.0",
+    "@stylistic/eslint-plugin": "^5.0.0",
+    "eslint": "^10.0.0",
+    "eslint-config-prettier": "^10.0.0",
+    "eslint-import-resolver-typescript": "^4.0.0",
+    "eslint-plugin-import-x": "^4.0.0",
+    "eslint-plugin-prettier": "^5.5.0",
     "eslint-plugin-unused-imports": "^4.0.0",
-    "globals": "^15.6.0",
+    "globals": "^17.0.0",
     "prettier": "^3.3.2",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2 || ^6.0.0",
+    "typescript-eslint": "^8.0.0"
   }
 }
