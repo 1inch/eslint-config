@@ -7,6 +7,12 @@
     "./testing": "./testing.mjs",
     "./package.json": "./package.json"
   },
+  "files": [
+    "index.mjs",
+    "testing.mjs",
+    "rules/*.mjs",
+    "!rules/*.test.mjs"
+  ],
   "license": "UNLICENSED",
   "dependencies": {
     "semver": "^7.7.4"
