@@ -2,6 +2,11 @@
   "name": "@1inch/eslint-config",
   "version": "5.0.1",
   "main": "index.mjs",
+  "exports": {
+    ".": "./index.mjs",
+    "./testing": "./testing.mjs",
+    "./package.json": "./package.json"
+  },
   "license": "UNLICENSED",
   "dependencies": {
     "semver": "^7.7.4"
