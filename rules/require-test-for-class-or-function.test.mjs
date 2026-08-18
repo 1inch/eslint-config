@@ -1,25 +1,30 @@
-import { it, describe } from 'vitest'
+import { it, describe, beforeAll, afterAll } from 'vitest'
 import { RuleTester } from 'eslint'
 import tseslint from 'typescript-eslint'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { requireTestForClassOrFunction } from './require-test-for-class-or-function.mjs'
+import { createFixtureRoot, writeFixtureFiles, removeFixtureRoot } from '../test-utils.mjs'
 
 RuleTester.it = it
 RuleTester.describe = describe
 RuleTester.itOnly = it.only
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const fixtureBase = path.join(
-    __dirname,
-    '__fixtures__',
-    'require-test-for-class-or-function',
-    'src',
-    'components',
-    'foo',
-    'core',
-    'services'
-)
+const fixtureRoot = createFixtureRoot('require-test-for-class-or-function-')
+const fixtureBase = path.join(fixtureRoot, 'src', 'components', 'foo', 'core', 'services')
+
+const FIXTURE_FILES = [
+    'src/components/foo/core/services/has-test/thing.ts',
+    'src/components/foo/core/services/has-test/thing.test.ts',
+    'src/components/foo/core/services/has-spec/thing.ts',
+    'src/components/foo/core/services/has-spec/thing.spec.ts',
+    'src/components/foo/core/services/missing-test/thing.ts',
+    'src/components/foo/core/services/cache-with-integration-test/thing.cache.ts',
+    'src/components/foo/core/services/cache-with-integration-test/thing.cache.integration.test.ts',
+    'src/components/foo/core/domain/widget/widget.ts'
+]
+
+beforeAll(() => writeFixtureFiles(fixtureRoot, FIXTURE_FILES))
+afterAll(() => removeFixtureRoot(fixtureRoot))
 
 const hasTestFile = path.join(fixtureBase, 'has-test', 'thing.ts')
 const hasSpecFile = path.join(fixtureBase, 'has-spec', 'thing.ts')
@@ -27,9 +32,7 @@ const missingTestFile = path.join(fixtureBase, 'missing-test', 'thing.ts')
 const cacheWithIntegrationTestFile = path.join(fixtureBase, 'cache-with-integration-test', 'thing.cache.ts')
 
 const abstractWithConcreteMethodFile = path.join(
-    __dirname,
-    '__fixtures__',
-    'require-test-for-class-or-function',
+    fixtureRoot,
     'src',
     'components',
     'foo',

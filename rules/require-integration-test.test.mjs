@@ -1,37 +1,43 @@
-import { it, describe } from 'vitest'
+import { it, describe, beforeAll, afterAll } from 'vitest'
 import { RuleTester } from 'eslint'
 import tseslint from 'typescript-eslint'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 import {
     requireControllerIntegrationTest,
     requireSecondaryAdapterIntegrationTest,
     requireUseCaseUnitTest,
     requireCacheIntegrationTest
 } from './require-integration-test.mjs'
+import { createFixtureRoot, writeFixtureFiles, removeFixtureRoot } from '../test-utils.mjs'
 
 RuleTester.it = it
 RuleTester.describe = describe
 RuleTester.itOnly = it.only
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const fixtureBase = path.join(
-    __dirname,
-    '__fixtures__',
-    'require-integration-test',
-    'src',
-    'components',
-    'foo'
-)
-const specNamingBase = path.join(
-    __dirname,
-    '__fixtures__',
-    'require-integration-test',
-    'spec-naming',
-    'src',
-    'components',
-    'foo'
-)
+const fixtureRoot = createFixtureRoot('require-integration-test-')
+const fixtureBase = path.join(fixtureRoot, 'src', 'components', 'foo')
+
+// One scenario directory per case. `has-spec` is the `.integration.spec.ts`
+// naming variant (exercised via the integrationTestSuffix option).
+const FIXTURE_FILES = [
+    'src/components/foo/controllers/has-test/foo.controller.ts',
+    'src/components/foo/controllers/has-test/foo.controller.integration.test.ts',
+    'src/components/foo/controllers/missing-test/foo.controller.ts',
+    'src/components/foo/controllers/has-spec/foo.controller.ts',
+    'src/components/foo/controllers/has-spec/foo.controller.integration.spec.ts',
+    'src/components/foo/secondary/has-test/foo.repository.ts',
+    'src/components/foo/secondary/has-test/foo.repository.integration.test.ts',
+    'src/components/foo/secondary/missing-test/foo.repository.ts',
+    'src/components/foo/secondary/cache/has-test/foo.cache.ts',
+    'src/components/foo/secondary/cache/has-test/foo.cache.integration.test.ts',
+    'src/components/foo/secondary/cache/missing-test/foo.cache.ts',
+    'src/components/foo/core/use-cases/has-test/get-foo.use-case.ts',
+    'src/components/foo/core/use-cases/has-test/get-foo.use-case.test.ts',
+    'src/components/foo/core/use-cases/missing-test/get-foo.use-case.ts'
+]
+
+beforeAll(() => writeFixtureFiles(fixtureRoot, FIXTURE_FILES))
+afterAll(() => removeFixtureRoot(fixtureRoot))
 
 const ruleTester = new RuleTester({
     languageOptions: { parser: tseslint.parser }
@@ -63,7 +69,7 @@ ruleTester.run('require-controller-integration-test', requireControllerIntegrati
         // custom integration-test suffix: sibling .integration.spec.ts exists
         {
             code: 'export class FooController {}',
-            filename: path.join(specNamingBase, 'controllers', 'has-spec', 'foo.controller.ts'),
+            filename: path.join(fixtureBase, 'controllers', 'has-spec', 'foo.controller.ts'),
             options: [{ integrationTestSuffix: '.integration.spec.ts' }]
         }
     ],
