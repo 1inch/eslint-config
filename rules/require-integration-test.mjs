@@ -8,10 +8,9 @@ import path from 'node:path'
  * Each rule requires a sibling test file (integration or unit) for a family of
  * architectural artifacts, identified by filename suffix and path scoping.
  *
- * Ported from aqua-api `eslint-rules/require-integration-test.mjs`.
- * The previously hardcoded conventions are configurable via options; the defaults
- * reproduce the aqua-api behavior exactly. The artifact suffixes themselves
- * (`.controller.ts`, `.repository.ts`, ...) define what each rule is about and stay fixed.
+ * The conventions (path scoping and test-file suffixes) are configurable via options.
+ * The artifact suffixes themselves (`.controller.ts`, `.repository.ts`, ...) define
+ * what each rule is about and stay fixed.
  */
 
 const DEFAULT_SUFFIXES = {

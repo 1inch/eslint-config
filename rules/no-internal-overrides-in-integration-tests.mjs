@@ -26,9 +26,7 @@
  * If you need to assert on mocked behavior (e.g. metric calls, logger calls), write a UNIT
  * test instead (`*.test.ts`). Unit tests are allowed to mock freely.
  *
- * Ported from aqua-api `eslint-rules/no-internal-overrides-in-integration-tests.mjs`.
- * The integration-test filename suffixes are configurable via options; the defaults
- * reproduce the aqua-api behavior exactly.
+ * The integration-test filename suffixes are configurable via options.
  */
 
 const DEFAULT_OPTIONS = {

@@ -10,8 +10,8 @@ import { noInternalOverridesInIntegrationTests } from './rules/no-internal-overr
 /**
  * Opt-in testing preset (`@1inch/eslint-config/testing`).
  *
- * Enforces test-coverage conventions for hexagonal NestJS services
- * (ported from aqua-api). NOT part of the default export — consumers enable it explicitly:
+ * Enforces test-coverage conventions for hexagonal NestJS services.
+ * NOT part of the default export — consumers enable it explicitly:
  *
  *     import oneInchEslintConfig from '@1inch/eslint-config'
  *     import oneInchTestingConfig from '@1inch/eslint-config/testing'

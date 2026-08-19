@@ -67,8 +67,8 @@ module.exports = {
 ## Testing preset (opt-in)
 
 `@1inch/eslint-config/testing` is a separate, **opt-in** preset enforcing test-coverage
-conventions for NestJS services with a hexagonal layout (ported from `aqua-api`).
-It is NOT part of the default export — enabling the main config does not enable these rules.
+conventions. It is NOT part of the default export — enabling the main config does not
+enable these rules.
 
 Requires `@1inch/eslint-config` >= the first release containing the preset (expected `5.1.0`).
 The preset itself is dependency-free (plain rule objects) and runs under ESLint 9 and ESLint 10.
@@ -99,7 +99,7 @@ at `error` severity with the default options below.
 
 ### Rule options and defaults
 
-Every rule accepts a single options object. Defaults reproduce the aqua-api conventions exactly.
+Every rule accepts a single options object; the defaults are listed in the table below.
 
 `pathIncludes` is a list of path fragments that must ALL be present in the file path for the
 rule to apply (AND semantics). To scope a rule to several alternative locations, add extra

@@ -8,9 +8,8 @@ import path from 'node:path'
  * arrow/function expression) must have a sibling unit-test file.
  * `.cache.ts` files may satisfy the requirement with an integration test instead.
  *
- * Ported from aqua-api `eslint-rules/require-test-for-class-or-function.mjs`.
- * The previously hardcoded conventions are configurable via options; the defaults
- * reproduce the aqua-api behavior exactly.
+ * The conventions (path scoping and test-file suffixes) are configurable via options;
+ * see DEFAULT_OPTIONS for the defaults.
  */
 
 const DEFAULT_OPTIONS = {
