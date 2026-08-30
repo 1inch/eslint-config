@@ -125,6 +125,51 @@ flat-config entries restricted via `files`.
 | | `integrationTestSuffix` | `'.integration.test.ts'` |
 | `no-internal-overrides-in-integration-tests` | `integrationTestSuffixes` | `['.integration.test.ts', '.integration.spec.ts']` |
 
+### Layout assumptions — check the scope before trusting a green run
+
+Every `pathIncludes` default above is aqua-api's folder layout
+(`src/components/<component>/{controllers,core,secondary}/`). Because the fragments are
+ANDed, a rule whose fragments are absent from a repo's paths does not misfire — it stops
+examining files at all. Enabling the preset on a service that arranges its layers
+differently therefore yields a green lint run rather than a list of missing tests.
+
+A measured example: charts-api (`@1inch/charts`) is hexagonal, but its layers are
+`src/app/api/`, `src/modules/core/` and `src/modules/secondary/`. Under the defaults its
+60-file `src/` reports **2 problems**; with `pathIncludes` matched to the layout, the same
+tree reports **6**. What the defaults skip there:
+
+| Artifact in the repo | Rule that should own it | Why it is skipped |
+|---|---|---|
+| `src/app/api/api.controller.ts` | `require-controller-integration-test` | no `/controllers/` folder |
+| `src/modules/secondary/healthcheck/healthcheck.controller.ts` | `require-controller-integration-test` | no `/controllers/` folder; in scope for the secondary rule, which does not govern `.controller.ts` |
+| `src/modules/secondary/storage/base.cache.ts` | `require-cache-integration-test` | no `/src/components/` folder |
+| `src/modules/core/charts/charts.service.ts` | `require-test-for-class-or-function` | `/core/` matches, `/src/components/` never does, and both are required |
+| `src/app/api/api.service.ts` | `require-secondary-adapter-integration-test` | outside `/secondary/` |
+
+Scoping the rules to that layout:
+
+```javascript
+export default [
+    ...oneInchEslintConfig,
+    ...oneInchTestingConfig,
+    {
+        rules: {
+            // no /controllers/ folder here: the .controller.ts suffix does the filtering
+            "1inch-testing/require-controller-integration-test": ["error", { pathIncludes: ["/src/"] }],
+            "1inch-testing/require-secondary-adapter-integration-test": ["error", { pathIncludes: ["/modules/secondary/"] }],
+            "1inch-testing/require-cache-integration-test": ["error", { pathIncludes: ["/modules/secondary/storage/"] }],
+            "1inch-testing/require-test-for-class-or-function": ["error", { pathIncludes: ["/modules/core/"] }],
+            "1inch-testing/require-use-case-unit-test": ["error", { pathIncludes: ["/modules/core/"] }],
+        },
+    },
+];
+```
+
+The artifact suffixes are fixed and carry the same assumption. `require-use-case-unit-test`
+recognises only `*.use-case.ts`, and no rule owns `*.storage.ts`, so a repo that names its
+use cases or its cache adapters differently gets nothing from those rules even with
+`pathIncludes` corrected. `testing.layout-assumptions.test.mjs` pins this down case by case.
+
 Repos using `.spec.ts` naming (e.g. `cross-chain-trader`) override the suffixes:
 
 ```javascript
