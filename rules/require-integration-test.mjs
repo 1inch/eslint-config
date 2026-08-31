@@ -1,16 +1,21 @@
 import { existsSync } from 'node:fs'
 import path from 'node:path'
+import { scopePath, matchesPathIncludes, contextCwd } from './path-scope.mjs'
 
 /**
  * ESLint rules: require-controller-integration-test, require-secondary-adapter-integration-test,
  * require-use-case-unit-test, require-cache-integration-test
  *
  * Each rule requires a sibling test file (integration or unit) for a family of
- * architectural artifacts, identified by filename suffix and path scoping.
+ * architectural artifacts, identified by filename suffix.
  *
- * The conventions (path scoping and test-file suffixes) are configurable via options.
- * The artifact suffixes themselves (`.controller.ts`, `.repository.ts`, ...) define
- * what each rule is about and stay fixed.
+ * The artifact suffix is what identifies the artifact, so by default these rules
+ * apply wherever the file lives: a `.controller.ts` needs a controller integration
+ * test whether it sits in `controllers/`, `app/api/` or anywhere else. `pathIncludes`
+ * is available to NARROW a rule to part of a tree, but nothing has to be configured
+ * for the rules to see a repository's artifacts.
+ *
+ * The one exception is `.service.ts` — see SECONDARY_ADAPTER_ARTIFACTS.
  */
 
 const DEFAULT_SUFFIXES = {
@@ -44,14 +49,29 @@ const SECONDARY_ADAPTER_ARTIFACTS = [
     { suffix: '.repository.ts', testKind: 'integration', type: 'Repository' },
     { suffix: '.client.ts', testKind: 'integration', type: 'Client' },
     { suffix: '.producer.ts', testKind: 'integration', type: 'Producer' },
-    { suffix: '.service.ts', testKind: 'integration', type: 'Service' }
+    // `.service.ts` is the only suffix here that does not identify a layer. In a
+    // typical Nest app it names classes everywhere — core services, infra
+    // services, application services — so treating every one as a driven adapter
+    // demands integration tests for code that wants unit tests. Measured against
+    // aqua-api, dropping the location requirement for this suffix alone accounts
+    // for 19 of 23 new reports, none of them secondary adapters. It therefore
+    // keeps a location requirement while the unambiguous suffixes above do not.
+    //
+    // An explicit `pathIncludes` in the rule options replaces this default, so a
+    // repo that keeps its adapters somewhere else can still say so.
+    {
+        suffix: '.service.ts',
+        testKind: 'integration',
+        type: 'Service',
+        pathIncludes: ['/secondary/']
+    }
 ]
 
 const USE_CASE_ARTIFACTS = [{ suffix: '.use-case.ts', testKind: 'unit', type: 'UseCase' }]
 
 const CACHE_ARTIFACTS = [{ suffix: '.cache.ts', testKind: 'integration', type: 'Cache' }]
 
-function createRule(artifacts, defaultPathIncludes) {
+function createRule(artifacts, defaultPathIncludes = []) {
     return {
         meta: {
             type: 'problem',
@@ -67,12 +87,24 @@ function createRule(artifacts, defaultPathIncludes) {
                 ...(context.options[0] ?? {})
             }
             const filename = context.filename || context.getFilename()
+            const scopedPath = scopePath(filename, contextCwd(context))
+            // A configured scope is authoritative: it replaces both the rule
+            // default and any per-artifact default below.
+            const scopeIsConfigured = context.options[0]?.pathIncludes !== undefined
 
-            if (!options.pathIncludes.every((fragment) => filename.includes(fragment))) {
+            if (!matchesPathIncludes(scopedPath, options.pathIncludes)) {
                 return {}
             }
 
             for (const artifact of artifacts) {
+                if (
+                    !scopeIsConfigured &&
+                    artifact.pathIncludes &&
+                    !matchesPathIncludes(scopedPath, artifact.pathIncludes)
+                ) {
+                    continue
+                }
+
                 if (
                     filename.endsWith(artifact.suffix) &&
                     !filename.includes(options.unitTestSuffix) &&
@@ -105,12 +137,12 @@ function createRule(artifacts, defaultPathIncludes) {
     }
 }
 
-export const requireControllerIntegrationTest = createRule(CONTROLLER_ARTIFACTS, ['/controllers/'])
+// No default path scope: the suffix identifies the artifact, so these apply
+// wherever it lives. `pathIncludes` narrows them when a repo wants that.
+export const requireControllerIntegrationTest = createRule(CONTROLLER_ARTIFACTS)
 
-export const requireSecondaryAdapterIntegrationTest = createRule(SECONDARY_ADAPTER_ARTIFACTS, [
-    '/secondary/'
-])
+export const requireSecondaryAdapterIntegrationTest = createRule(SECONDARY_ADAPTER_ARTIFACTS)
 
-export const requireUseCaseUnitTest = createRule(USE_CASE_ARTIFACTS, ['/core/'])
+export const requireUseCaseUnitTest = createRule(USE_CASE_ARTIFACTS)
 
-export const requireCacheIntegrationTest = createRule(CACHE_ARTIFACTS, ['/src/components/'])
+export const requireCacheIntegrationTest = createRule(CACHE_ARTIFACTS)

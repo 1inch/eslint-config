@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs'
 import path from 'node:path'
+import { scopePath, matchesPathIncludes, contextCwd } from './path-scope.mjs'
 
 /**
  * ESLint rule: require-test-for-class-or-function
@@ -8,8 +9,13 @@ import path from 'node:path'
  * arrow/function expression) must have a sibling unit-test file.
  * `.cache.ts` files may satisfy the requirement with an integration test instead.
  *
- * The conventions (path scoping and test-file suffixes) are configurable via options;
- * see DEFAULT_OPTIONS for the defaults.
+ * Unlike the suffix-driven rules in require-integration-test.mjs, this one is
+ * decided by the AST, so it governs every exported class or function in scope —
+ * bootstrap files, error types and DTOs included. It has no useful universal
+ * scope: run unscoped over aqua-api it reports 280 files. `pathIncludes` is
+ * therefore load-bearing rather than optional, which is why the testing preset
+ * does not enable this rule by default. DEFAULT_OPTIONS keeps aqua-api's scope
+ * for the repos already configured against it.
  */
 
 const DEFAULT_OPTIONS = {
@@ -91,8 +97,9 @@ export const requireTestForClassOrFunction = {
     create(context) {
         const options = { ...DEFAULT_OPTIONS, ...(context.options[0] ?? {}) }
         const filename = context.filename ?? context.getFilename()
+        const scopedPath = scopePath(filename, contextCwd(context))
 
-        if (!options.pathIncludes.every((fragment) => filename.includes(fragment))) return {}
+        if (!matchesPathIncludes(scopedPath, options.pathIncludes)) return {}
 
         if (
             filename.endsWith(options.unitTestSuffix) ||

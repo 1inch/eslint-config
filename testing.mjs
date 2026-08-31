@@ -36,6 +36,20 @@ export const testingPlugin = {
     }
 }
 
+/**
+ * `require-test-for-class-or-function` is registered above but NOT enabled here.
+ * It is decided by the AST rather than an artifact suffix, so it governs every
+ * exported class or function in its scope and only means something once a repo
+ * has chosen that scope — unscoped it reports 280 files in aqua-api. Enabling it
+ * with a scope that fits one repo is what made the other rules' defaults
+ * misleading elsewhere. Repos that want it turn it on with their own
+ * `pathIncludes`:
+ *
+ *     '1inch-testing/require-test-for-class-or-function': [
+ *         'error',
+ *         { pathIncludes: ['/src/components/', '/core/'] }
+ *     ]
+ */
 export default [
     {
         name: '@1inch/eslint-config/testing',
@@ -43,7 +57,6 @@ export default [
             '1inch-testing': testingPlugin
         },
         rules: {
-            '1inch-testing/require-test-for-class-or-function': 'error',
             '1inch-testing/require-controller-integration-test': 'error',
             '1inch-testing/require-secondary-adapter-integration-test': 'error',
             '1inch-testing/require-use-case-unit-test': 'error',
