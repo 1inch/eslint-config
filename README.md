@@ -83,70 +83,75 @@ export default [
 ];
 ```
 
-The preset registers a single plugin namespace `1inch-testing` and enables all six rules
-at `error` severity with the default options below.
+The preset registers a single plugin namespace `1inch-testing`. Five rules are enabled at
+`error` severity; `require-test-for-class-or-function` is registered but left off, because it
+only means something once a repo has chosen a scope for it (see below).
+
+The enabled rules identify an artifact by its filename suffix and apply **wherever the file
+lives**, so a repo does not have to describe its folder layout to get enforcement.
 
 ### Rules
 
-| Rule | Enforces |
-|---|---|
-| `1inch-testing/require-test-for-class-or-function` | every exported testable artifact (concrete class, function, arrow/function expression) has a sibling unit test; `.cache.ts` files may have an integration test instead |
-| `1inch-testing/require-controller-integration-test` | `*.controller.ts`, `*.scheduler.ts`, `*.consumer.ts`, `*.listener.ts`, `*.worker.ts` under `/controllers/` have a sibling integration test |
-| `1inch-testing/require-secondary-adapter-integration-test` | `*.repository.ts`, `*.client.ts`, `*.producer.ts`, `*.service.ts` under `/secondary/` have a sibling integration test |
-| `1inch-testing/require-use-case-unit-test` | `*.use-case.ts` under `/core/` has a sibling unit test |
-| `1inch-testing/require-cache-integration-test` | `*.cache.ts` under `/src/components/` has a sibling integration test |
-| `1inch-testing/no-internal-overrides-in-integration-tests` | integration tests do not override internal implementation (`.overrideProvider(...)`, `.overrideGuard(...)`, `.overrideInterceptor(...)`, `.overridePipe(...)`, `.overrideFilter(...)`, `.useValue(...)`, `.useClass(...)`, `.useFactory(...)`, `.useExisting(...)` method calls are forbidden; provider-definition object properties like `{provide: X, useValue: Y}` remain allowed) |
+| Rule | Enforces | Default |
+|---|---|---|
+| `1inch-testing/require-controller-integration-test` | `*.controller.ts`, `*.scheduler.ts`, `*.consumer.ts`, `*.listener.ts`, `*.worker.ts` have a sibling integration test | on |
+| `1inch-testing/require-secondary-adapter-integration-test` | `*.repository.ts`, `*.client.ts`, `*.producer.ts` have a sibling integration test, anywhere; `*.service.ts` only under `/secondary/` | on |
+| `1inch-testing/require-use-case-unit-test` | `*.use-case.ts` has a sibling unit test | on |
+| `1inch-testing/require-cache-integration-test` | `*.cache.ts` has a sibling integration test | on |
+| `1inch-testing/require-test-for-class-or-function` | every exported testable artifact (concrete class, function, arrow/function expression) has a sibling unit test; `.cache.ts` files may have an integration test instead | **off** |
+| `1inch-testing/no-internal-overrides-in-integration-tests` | integration tests do not override internal implementation (`.overrideProvider(...)`, `.overrideGuard(...)`, `.overrideInterceptor(...)`, `.overridePipe(...)`, `.overrideFilter(...)`, `.useValue(...)`, `.useClass(...)`, `.useFactory(...)`, `.useExisting(...)` method calls are forbidden; provider-definition object properties like `{provide: X, useValue: Y}` remain allowed) | on |
 
 ### Rule options and defaults
 
 Every rule accepts a single options object; the defaults are listed in the table below.
 
-`pathIncludes` is a list of path fragments that must ALL be present in the file path for the
-rule to apply (AND semantics). To scope a rule to several alternative locations, add extra
-flat-config entries restricted via `files`.
+`pathIncludes` **narrows** a rule to part of a tree. It is a list of path fragments that must
+ALL be present (AND semantics), matched against the file's path relative to the project root —
+not its absolute path, so where the repository is checked out cannot change the result. The
+enabled rules default to no fragments, meaning the artifact suffix alone decides. To scope a
+rule to several alternative locations, add extra flat-config entries restricted via `files`.
 
 | Rule | Option | Default |
 |---|---|---|
-| `require-test-for-class-or-function` | `pathIncludes` | `['/src/components/', '/core/']` |
+| `require-controller-integration-test` | `pathIncludes` | `[]` |
+| | `unitTestSuffix` | `'.test.ts'` |
+| | `integrationTestSuffix` | `'.integration.test.ts'` |
+| `require-secondary-adapter-integration-test` | `pathIncludes` | `[]`, except `*.service.ts` which requires `/secondary/` |
+| | `unitTestSuffix` | `'.test.ts'` |
+| | `integrationTestSuffix` | `'.integration.test.ts'` |
+| `require-use-case-unit-test` | `pathIncludes` | `[]` |
+| | `unitTestSuffix` | `'.test.ts'` |
+| | `integrationTestSuffix` | `'.integration.test.ts'` |
+| `require-cache-integration-test` | `pathIncludes` | `[]` |
+| | `unitTestSuffix` | `'.test.ts'` |
+| | `integrationTestSuffix` | `'.integration.test.ts'` |
+| `require-test-for-class-or-function` | `pathIncludes` | `['/src/components/', '/core/']` (rule is off by default) |
 | | `unitTestSuffix` | `'.test.ts'` |
 | | `integrationTestSuffix` | `'.integration.test.ts'` |
 | | `cacheFileSuffix` | `'.cache.ts'` |
-| `require-controller-integration-test` | `pathIncludes` | `['/controllers/']` |
-| | `unitTestSuffix` | `'.test.ts'` |
-| | `integrationTestSuffix` | `'.integration.test.ts'` |
-| `require-secondary-adapter-integration-test` | `pathIncludes` | `['/secondary/']` |
-| | `unitTestSuffix` | `'.test.ts'` |
-| | `integrationTestSuffix` | `'.integration.test.ts'` |
-| `require-use-case-unit-test` | `pathIncludes` | `['/core/']` |
-| | `unitTestSuffix` | `'.test.ts'` |
-| | `integrationTestSuffix` | `'.integration.test.ts'` |
-| `require-cache-integration-test` | `pathIncludes` | `['/src/components/']` |
-| | `unitTestSuffix` | `'.test.ts'` |
-| | `integrationTestSuffix` | `'.integration.test.ts'` |
 | `no-internal-overrides-in-integration-tests` | `integrationTestSuffixes` | `['.integration.test.ts', '.integration.spec.ts']` |
 
-### Layout assumptions — check the scope before trusting a green run
+Setting `pathIncludes` explicitly on `require-secondary-adapter-integration-test` replaces the
+`*.service.ts` default too, so a repo that keeps its driven adapters somewhere other than
+`secondary/` can say where.
 
-Every `pathIncludes` default above is aqua-api's folder layout
-(`src/components/<component>/{controllers,core,secondary}/`). Because the fragments are
-ANDed, a rule whose fragments are absent from a repo's paths does not misfire — it stops
-examining files at all. Enabling the preset on a service that arranges its layers
-differently therefore yields a green lint run rather than a list of missing tests.
+### Why `*.service.ts` is treated differently
 
-A measured example: charts-api (`@1inch/charts`) is hexagonal, but its layers are
-`src/app/api/`, `src/modules/core/` and `src/modules/secondary/`. Under the defaults its
-60-file `src/` reports **2 problems**; with `pathIncludes` matched to the layout, the same
-tree reports **6**. What the defaults skip there:
+`.repository.ts`, `.client.ts`, `.producer.ts`, `.use-case.ts`, `.cache.ts` and the primary
+adapter suffixes each name one kind of thing, so the suffix is enough to identify the artifact.
+`.service.ts` does not: in a typical Nest app it names classes at every layer — core services,
+application services, infra services. Treating all of them as driven adapters demands
+integration tests for code that wants unit tests. Measured on aqua-api, removing the location
+requirement for this one suffix accounts for 19 of 23 additional reports, none of which are
+secondary adapters. It therefore keeps a `/secondary/` requirement, overridable via
+`pathIncludes`.
 
-| Artifact in the repo | Rule that should own it | Why it is skipped |
-|---|---|---|
-| `src/app/api/api.controller.ts` | `require-controller-integration-test` | no `/controllers/` folder |
-| `src/modules/secondary/healthcheck/healthcheck.controller.ts` | `require-controller-integration-test` | no `/controllers/` folder; in scope for the secondary rule, which does not govern `.controller.ts` |
-| `src/modules/secondary/storage/base.cache.ts` | `require-cache-integration-test` | no `/src/components/` folder |
-| `src/modules/core/charts/charts.service.ts` | `require-test-for-class-or-function` | `/core/` matches, `/src/components/` never does, and both are required |
-| `src/app/api/api.service.ts` | `require-secondary-adapter-integration-test` | outside `/secondary/` |
+### Why `require-test-for-class-or-function` is off by default
 
-Scoping the rules to that layout:
+It is decided by the AST rather than a suffix, so it governs every exported class or function in
+scope: bootstrap files, error types and DTOs included. Run without a path scope over aqua-api it
+reports 280 files, so unlike the other rules it has no useful universal default and needs a scope
+chosen per repo. Enable it with one:
 
 ```javascript
 export default [
@@ -154,21 +159,22 @@ export default [
     ...oneInchTestingConfig,
     {
         rules: {
-            // no /controllers/ folder here: the .controller.ts suffix does the filtering
-            "1inch-testing/require-controller-integration-test": ["error", { pathIncludes: ["/src/"] }],
-            "1inch-testing/require-secondary-adapter-integration-test": ["error", { pathIncludes: ["/modules/secondary/"] }],
-            "1inch-testing/require-cache-integration-test": ["error", { pathIncludes: ["/modules/secondary/storage/"] }],
-            "1inch-testing/require-test-for-class-or-function": ["error", { pathIncludes: ["/modules/core/"] }],
-            "1inch-testing/require-use-case-unit-test": ["error", { pathIncludes: ["/modules/core/"] }],
+            "1inch-testing/require-test-for-class-or-function": [
+                "error",
+                { pathIncludes: ["/src/components/", "/core/"] },
+            ],
         },
     },
 ];
 ```
 
-The artifact suffixes are fixed and carry the same assumption. `require-use-case-unit-test`
-recognises only `*.use-case.ts`, and no rule owns `*.storage.ts`, so a repo that names its
-use cases or its cache adapters differently gets nothing from those rules even with
-`pathIncludes` corrected. `testing.layout-assumptions.test.mjs` pins this down case by case.
+### Artifact naming is still a shared convention
+
+The suffixes above are the vocabulary. A repo that names its use cases something other than
+`*.use-case.ts`, or its cache adapters `*.storage.ts` rather than `*.cache.ts`, gets nothing from
+the corresponding rule — no path configuration changes that.
+`testing.layout-independence.test.mjs` pins down what is and is not covered, case by case,
+against a layout that is not aqua-api's.
 
 Repos using `.spec.ts` naming (e.g. `cross-chain-trader`) override the suffixes:
 

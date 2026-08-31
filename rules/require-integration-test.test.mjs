@@ -50,12 +50,7 @@ ruleTester.run('require-controller-integration-test', requireControllerIntegrati
             code: 'export class FooController {}',
             filename: path.join(fixtureBase, 'controllers', 'has-test', 'foo.controller.ts')
         },
-        // outside /controllers/ the rule does not apply
-        {
-            code: 'export class FooController {}',
-            filename: '/virtual/app/foo.controller.ts'
-        },
-        // non-artifact files under /controllers/ are not governed
+        // non-artifact files are not governed
         {
             code: 'export const helper = 1',
             filename: '/virtual/app/controllers/helpers.ts'
@@ -77,6 +72,15 @@ ruleTester.run('require-controller-integration-test', requireControllerIntegrati
         {
             code: 'export class FooController {}',
             filename: path.join(fixtureBase, 'controllers', 'missing-test', 'foo.controller.ts'),
+            errors: [
+                { message: /Controller must have integration test\. Missing: .*foo\.controller\.integration\.test\.ts/ }
+            ]
+        },
+        // the .controller.ts suffix identifies the artifact, so a controller is
+        // governed outside a /controllers/ folder too
+        {
+            code: 'export class FooController {}',
+            filename: '/virtual/app/api/foo.controller.ts',
             errors: [
                 { message: /Controller must have integration test\. Missing: .*foo\.controller\.integration\.test\.ts/ }
             ]
@@ -124,16 +128,30 @@ ruleTester.run('require-secondary-adapter-integration-test', requireSecondaryAda
             code: 'export class FooRepository {}',
             filename: path.join(fixtureBase, 'secondary', 'has-test', 'foo.repository.ts')
         },
-        // outside /secondary/ the rule does not apply
+        // `.service.ts` names classes at every layer, so unlike the other
+        // suffixes it keeps a location requirement: a core service is not a
+        // secondary adapter and is not governed here.
         {
-            code: 'export class FooRepository {}',
-            filename: '/virtual/app/foo.repository.ts'
+            code: 'export class PriceService {}',
+            filename: '/virtual/app/core/services/price.service.ts'
+        },
+        {
+            code: 'export class MetricsService {}',
+            filename: '/virtual/app/infra/metrics/metrics.service.ts'
         }
     ],
     invalid: [
         {
             code: 'export class FooRepository {}',
             filename: path.join(fixtureBase, 'secondary', 'missing-test', 'foo.repository.ts'),
+            errors: [
+                { message: /Repository must have integration test\. Missing: .*foo\.repository\.integration\.test\.ts/ }
+            ]
+        },
+        // an unambiguous suffix is governed wherever it lives
+        {
+            code: 'export class FooRepository {}',
+            filename: '/virtual/app/persistence/foo.repository.ts',
             errors: [
                 { message: /Repository must have integration test\. Missing: .*foo\.repository\.integration\.test\.ts/ }
             ]
@@ -152,6 +170,14 @@ ruleTester.run('require-secondary-adapter-integration-test', requireSecondaryAda
             code: 'export class PriceService {}',
             filename: '/virtual/app/secondary/price.service.ts',
             errors: [{ message: /Service must have integration test\. Missing: .*price\.service\.integration\.test\.ts/ }]
+        },
+        // a configured scope is authoritative and replaces the `.service.ts`
+        // location default, so a repo keeping adapters elsewhere can say so
+        {
+            code: 'export class PriceService {}',
+            filename: '/virtual/app/adapters/price.service.ts',
+            options: [{ pathIncludes: ['/adapters/'] }],
+            errors: [{ message: /Service must have integration test\. Missing: .*price\.service\.integration\.test\.ts/ }]
         }
     ]
 })
@@ -162,12 +188,7 @@ ruleTester.run('require-use-case-unit-test', requireUseCaseUnitTest, {
             code: 'export class GetFooUseCase {}',
             filename: path.join(fixtureBase, 'core', 'use-cases', 'has-test', 'get-foo.use-case.ts')
         },
-        // outside /core/ the rule does not apply
-        {
-            code: 'export class GetFooUseCase {}',
-            filename: '/virtual/app/get-foo.use-case.ts'
-        },
-        // non-use-case files under /core/ are not governed
+        // non-use-case files are not governed
         {
             code: 'export const helper = 1',
             filename: '/virtual/app/core/helpers.ts'
@@ -177,6 +198,12 @@ ruleTester.run('require-use-case-unit-test', requireUseCaseUnitTest, {
         {
             code: 'export class GetFooUseCase {}',
             filename: path.join(fixtureBase, 'core', 'use-cases', 'missing-test', 'get-foo.use-case.ts'),
+            errors: [{ message: /UseCase must have unit test\. Missing: .*get-foo\.use-case\.test\.ts/ }]
+        },
+        // governed outside a /core/ folder too
+        {
+            code: 'export class GetFooUseCase {}',
+            filename: '/virtual/app/application/get-foo.use-case.ts',
             errors: [{ message: /UseCase must have unit test\. Missing: .*get-foo\.use-case\.test\.ts/ }]
         },
         // custom unit-test suffix changes the expected sibling
@@ -195,16 +222,23 @@ ruleTester.run('require-cache-integration-test', requireCacheIntegrationTest, {
             code: 'export class FooCache {}',
             filename: path.join(fixtureBase, 'secondary', 'cache', 'has-test', 'foo.cache.ts')
         },
-        // outside /src/components/ the rule does not apply
+        // narrowing still works when a repo wants it
         {
             code: 'export class FooCache {}',
-            filename: '/virtual/lib/foo.cache.ts'
+            filename: '/virtual/lib/foo.cache.ts',
+            options: [{ pathIncludes: ['/src/components/'] }]
         }
     ],
     invalid: [
         {
             code: 'export class FooCache {}',
             filename: path.join(fixtureBase, 'secondary', 'cache', 'missing-test', 'foo.cache.ts'),
+            errors: [{ message: /Cache must have integration test\. Missing: .*foo\.cache\.integration\.test\.ts/ }]
+        },
+        // governed outside a components tree too
+        {
+            code: 'export class FooCache {}',
+            filename: '/virtual/lib/foo.cache.ts',
             errors: [{ message: /Cache must have integration test\. Missing: .*foo\.cache\.integration\.test\.ts/ }]
         }
     ]
