@@ -5,7 +5,7 @@ import path from 'node:path'
 import testingConfig, { testingPlugin } from './testing.mjs'
 import { createFixtureRoot, writeFixtureFiles, removeFixtureRoot } from './test-utils.mjs'
 
-const EXPECTED_RULES = [
+const AVAILABLE_RULES = [
     'require-test-for-class-or-function',
     'require-controller-integration-test',
     'require-secondary-adapter-integration-test',
@@ -13,6 +13,12 @@ const EXPECTED_RULES = [
     'require-cache-integration-test',
     'no-internal-overrides-in-integration-tests'
 ]
+
+// `require-test-for-class-or-function` is registered but not enabled: it needs a
+// repo-specific `pathIncludes` to mean anything (see testing.mjs).
+const ENABLED_BY_DEFAULT = AVAILABLE_RULES.filter(
+    (rule) => rule !== 'require-test-for-class-or-function'
+)
 
 const fixtureRoot = createFixtureRoot('testing-preset-')
 
@@ -63,18 +69,25 @@ describe('@1inch/eslint-config/testing preset', () => {
         expect(testingConfig[0].plugins['1inch-testing']).toBe(testingPlugin)
     })
 
-    it('enables all six rules at error severity', () => {
+    it('enables the suffix-driven rules at error severity', () => {
         const configuredRules = testingConfig[0].rules
 
-        for (const rule of EXPECTED_RULES) {
+        for (const rule of ENABLED_BY_DEFAULT) {
             expect(configuredRules[`1inch-testing/${rule}`]).toBe('error')
         }
 
-        expect(Object.keys(configuredRules)).toHaveLength(EXPECTED_RULES.length)
+        expect(Object.keys(configuredRules)).toHaveLength(ENABLED_BY_DEFAULT.length)
+    })
+
+    it('registers but does not enable require-test-for-class-or-function', () => {
+        expect(testingPlugin.rules['require-test-for-class-or-function']).toBeDefined()
+        expect(
+            testingConfig[0].rules['1inch-testing/require-test-for-class-or-function']
+        ).toBeUndefined()
     })
 
     it('the plugin exposes exactly the six rules', () => {
-        expect(Object.keys(testingPlugin.rules).sort()).toEqual([...EXPECTED_RULES].sort())
+        expect(Object.keys(testingPlugin.rules).sort()).toEqual([...AVAILABLE_RULES].sort())
     })
 
     it('flags a use case without a unit test', async () => {
@@ -84,7 +97,7 @@ describe('@1inch/eslint-config/testing preset', () => {
         )
 
         expect(ruleIds(messages)).toContain('1inch-testing/require-use-case-unit-test')
-        expect(ruleIds(messages)).toContain('1inch-testing/require-test-for-class-or-function')
+        expect(ruleIds(messages)).not.toContain('1inch-testing/require-test-for-class-or-function')
     })
 
     it('flags a controller without an integration test', async () => {
